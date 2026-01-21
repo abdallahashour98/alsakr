@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'services/purchases_service.dart';
+import 'services/pb_helper.dart';
 
 class SupplierDialog extends StatefulWidget {
   final Map<String, dynamic>? supplier;
@@ -22,8 +21,12 @@ class _SupplierDialogState extends State<SupplierDialog> {
     text: '0',
   );
 
+  // 0 = علينا (دائن - موجب)، 1 = لنا (مدين - سالب)
   int _balanceType = 0;
   bool _isLoading = false;
+
+  String? _openingBalanceRecordId; // لتخزين معرف سجل الرصيد الافتتاحي
+  double _originalOpeningBalance = 0.0; // عشان نعرف الفرق عند التعديل
 
   @override
   void initState() {
@@ -31,16 +34,44 @@ class _SupplierDialogState extends State<SupplierDialog> {
     if (widget.supplier != null) {
       _nameController.text = widget.supplier!['name'];
       _phoneController.text = widget.supplier!['phone'] ?? '';
-      _managerController.text = widget.supplier!['manager'] ?? '';
+      _managerController.text =
+          widget.supplier!['contactPerson'] ??
+          widget.supplier!['manager'] ??
+          '';
       _addressController.text = widget.supplier!['address'] ?? '';
-      _notesController.text = widget.supplier!['notes'] ?? '';
 
-      double balance =
-          (widget.supplier!['initial_balance'] as num?)?.toDouble() ?? 0.0;
-      _balanceController.text = balance.abs().toString();
+      // جلب الرصيد الافتتاحي
+      _fetchOpeningBalance();
+    }
+  }
 
-      String type = widget.supplier!['balance_type'] ?? 'debit';
-      _balanceType = type == 'debit' ? 0 : 1;
+  Future<void> _fetchOpeningBalance() async {
+    try {
+      final records = await PBHelper().pb
+          .collection('supplier_opening_balances')
+          .getList(
+            filter: 'supplier = "${widget.supplier!['id']}"',
+            perPage: 1,
+          );
+
+      if (records.items.isNotEmpty) {
+        final record = records.items.first;
+        final amount = (record.data['amount'] as num).toDouble();
+
+        if (mounted) {
+          setState(() {
+            _openingBalanceRecordId = record.id;
+            _originalOpeningBalance = amount;
+            _balanceController.text = amount.abs().toString();
+            _balanceType = amount >= 0 ? 0 : 1;
+            if (_notesController.text.isEmpty) {
+              _notesController.text = record.data['notes'] ?? '';
+            }
+          });
+        }
+      }
+    } catch (e) {
+      print("Error fetching opening balance: $e");
     }
   }
 
@@ -50,45 +81,97 @@ class _SupplierDialogState extends State<SupplierDialog> {
     setState(() => _isLoading = true);
 
     try {
-      final body = {
+      // 1. حساب قيمة الرصيد الافتتاحي الجديد (موجب أو سالب)
+      double inputAmount = double.tryParse(_balanceController.text) ?? 0.0;
+      final finalOpeningBalance = _balanceType == 0
+          ? inputAmount
+          : -inputAmount;
+
+      // ✅ تصحيح الخطأ: تعريف النوع صراحة Map<String, dynamic>
+      final Map<String, dynamic> body = {
         "name": _nameController.text.trim(),
         "phone": _phoneController.text.trim(),
-        "manager": _managerController.text.trim(),
+        "contactPerson": _managerController.text.trim(),
         "address": _addressController.text.trim(),
-        "notes": _notesController.text.trim(),
-        "initial_balance": double.tryParse(_balanceController.text) ?? 0,
-        "balance_type": _balanceType == 0 ? "debit" : "credit",
       };
 
+      String supplierId;
+      String supplierName;
+
+      // 2. التعامل مع (إضافة جديد) أو (تعديل حالي)
       if (widget.supplier == null) {
-        final record = await PurchasesService().pb
+        // ========== حالة مورد جديد ==========
+        body['balance'] = finalOpeningBalance; // الآن يقبل double بدون مشاكل
+
+        final record = await PBHelper().pb
             .collection('suppliers')
             .create(body: body);
-        if (mounted) {
-          Navigator.pop(context, {
-            'id': record.id,
-            'name': record.data['name'],
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('تم إضافة المورد بنجاح ✅'),
-              backgroundColor: Colors.green,
-            ),
-          );
-        }
+        supplierId = record.id;
+        supplierName = record.data['name'];
       } else {
-        await PurchasesService().pb
-            .collection('suppliers')
-            .update(widget.supplier!['id'], body: body);
-        if (mounted) {
-          Navigator.pop(context, true);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('تم تعديل المورد بنجاح ✅'),
-              backgroundColor: Colors.green,
-            ),
-          );
+        // ========== حالة تعديل مورد ==========
+        supplierId = widget.supplier!['id'];
+        supplierName = _nameController.text;
+
+        // حساب الفرق لتعديل رصيد المورد الحالي
+        double diff = finalOpeningBalance - _originalOpeningBalance;
+
+        if (diff != 0) {
+          final currentSupplier = await PBHelper().pb
+              .collection('suppliers')
+              .getOne(supplierId);
+          double currentBalance =
+              (currentSupplier.data['balance'] as num?)?.toDouble() ?? 0.0;
+          body['balance'] = currentBalance + diff;
         }
+
+        await PBHelper().pb
+            .collection('suppliers')
+            .update(supplierId, body: body);
+      }
+
+      // 3. حفظ/تحديث سجل الرصيد الافتتاحي في الجدول المنفصل
+      final balanceBody = {
+        "supplier": supplierId,
+        "amount": finalOpeningBalance,
+        "date": DateTime.now().toIso8601String(),
+        "notes": _notesController.text.trim().isNotEmpty
+            ? _notesController.text.trim()
+            : "رصيد افتتاحي",
+      };
+
+      if (_openingBalanceRecordId != null) {
+        await PBHelper().pb
+            .collection('supplier_opening_balances')
+            .update(_openingBalanceRecordId!, body: balanceBody);
+      } else if (finalOpeningBalance != 0) {
+        final existing = await PBHelper().pb
+            .collection('supplier_opening_balances')
+            .getList(filter: 'supplier = "$supplierId"');
+        if (existing.items.isNotEmpty) {
+          await PBHelper().pb
+              .collection('supplier_opening_balances')
+              .update(existing.items.first.id, body: balanceBody);
+        } else {
+          await PBHelper().pb
+              .collection('supplier_opening_balances')
+              .create(body: balanceBody);
+        }
+      }
+
+      if (mounted) {
+        Navigator.pop(context, {'id': supplierId, 'name': supplierName});
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              widget.supplier == null
+                  ? 'تم إضافة المورد بنجاح ✅'
+                  : 'تم التعديل بنجاح ✅',
+            ),
+            backgroundColor: Colors.green,
+          ),
+        );
       }
     } catch (e) {
       if (mounted) {
@@ -121,7 +204,7 @@ class _SupplierDialogState extends State<SupplierDialog> {
           maxHeight: MediaQuery.of(context).size.height * 0.9,
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min, // ✅ هام جداً: يخلي الديلوج يلم نفسه
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               widget.supplier == null
@@ -135,9 +218,8 @@ class _SupplierDialogState extends State<SupplierDialog> {
             ),
             const SizedBox(height: 20),
 
-            // ✅ استبدال Expanded بـ Flexible
             Flexible(
-              fit: FlexFit.loose, // يسمح بالانكماش لو المحتوى قليل
+              fit: FlexFit.loose,
               child: SingleChildScrollView(
                 child: Form(
                   key: _formKey,
@@ -287,7 +369,7 @@ class _SupplierDialogState extends State<SupplierDialog> {
                                             () => _balanceType = val!,
                                           ),
                                           title: const Text(
-                                            "علينا",
+                                            "علينا", // Credit
                                             style: TextStyle(fontSize: 14),
                                           ),
                                           activeColor: Colors.red,
@@ -302,7 +384,7 @@ class _SupplierDialogState extends State<SupplierDialog> {
                                             () => _balanceType = val!,
                                           ),
                                           title: const Text(
-                                            "لنا",
+                                            "لنا", // Debit
                                             style: TextStyle(fontSize: 14),
                                           ),
                                           activeColor: Colors.green,
