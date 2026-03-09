@@ -1,0 +1,19 @@
+  0s compiling builders/jit
+  2s compiling builders/jit
+  3s compiling builders/jit
+  4s compiling builders/jit
+  5s compiling builders/jit
+  6s compiling builders/jit
+  7s compiling builders/jit
+  8s compiling builders/jit
+Running build hooks...Running build hooks...  0s riverpod_generator on 63 inputs; lib/GeneralReportsScreen.dart
+  10s riverpod_generator on 63 inputs: 1 no-op; spent 9s sdk; lib/background_listener.dart
+  46s riverpod_generator on 63 inputs: 1 output, 7 no-op; spent 30s analyzing, 9s sdk, 5s resolving; lib/core/locale/locale_provider.dart
+  47s riverpod_generator on 63 inputs: 19 output, 20 no-op; spent 31s analyzing, 9s sdk, 5s resolving, 1s building; lib/features/store/repositories/store_repository.dart
+  48s riverpod_generator on 63 inputs: 24 output, 39 no-op; spent 31s analyzing, 9s sdk, 5s resolving, 1s building
+  0s source_gen:combining_builder on 63 inputs; lib/GeneralReportsScreen.dart
+W source_gen:combining_builder on lib/core/network/pb_helper_provider.dart:
+  pb_helper_provider.g.dart must be included as a part directive in the input library with:
+      part 'pb_helper_provider.g.dart';
+  0s source_gen:combining_builder on 63 inputs: 23 output, 40 no-op
+  Built with build_runner/jit in 59s; wrote 47 outputs.

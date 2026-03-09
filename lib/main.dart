@@ -1,18 +1,21 @@
+import 'package:al_sakr/core/network/pb_helper_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import 'dart:io';
-import 'package:al_sakr/splash_screen.dart'; // تأكد من المسار
-import 'package:al_sakr/notices_screen.dart'; // ✅ تأكد من استيراد هذا الملف
+import 'package:al_sakr/features/dashboard/presentations/dashboard_screen.dart';
+import 'package:al_sakr/features/notices/presentations/notices_screen.dart'; // ✅ تأكد من استيراد هذا الملف
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'; // ✅ تمت الإضافة
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'services/pb_helper.dart';
-import 'services/notice_service.dart';
-import 'login_screen.dart';
-import 'notification_service.dart';
-import 'background_listener.dart';
+import 'package:al_sakr/core/network/pb_helper.dart';
+import 'package:al_sakr/core/sync/connectivity_service.dart';
+import 'package:al_sakr/core/database/database_helper.dart';
+import 'package:al_sakr/features/auth/presentations/login_screen.dart';
+import 'package:al_sakr/core/services/notification_service.dart';
+import 'package:al_sakr/core/services/background_listener.dart';
 
-import 'services/settings_service.dart';
+import 'package:al_sakr/core/services/settings_service.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.system);
@@ -52,17 +55,19 @@ void main() {
         // 2. تهيئة PBHelper وتمرير دالة التوجيه أيضاً لضمان عدم مسحها
         await PBHelper.init(onNotificationTap: onNotificationTap);
 
+        // 3. تهيئة قاعدة البيانات المحلية (SQLite)
+        await DatabaseHelper().database;
+        print('✅ Local database initialized');
+
         if (Platform.isAndroid || Platform.isIOS) {
           // 📱 للموبايل: شغل خدمة الخلفية فقط
           await initializeService();
-        } else {
-          // 💻 للكمبيوتر: شغل المستمع العادي فقط
-          NoticeService().startListeningToAnnouncements();
         }
+        // 💻 للكمبيوتر: مستمع الخلفية سيعمل عند فتح الشاشة
       } catch (e) {
         print("Error in main: $e");
       }
-      runApp(const AlSakrApp());
+      runApp(const ProviderScope(child: MyApp()));
     },
     (error, stack) {
       print("Zoned Error: $error");
@@ -70,11 +75,11 @@ void main() {
   );
 }
 
-class AlSakrApp extends StatelessWidget {
-  const AlSakrApp({super.key});
+class MyApp extends ConsumerWidget {
+  const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: themeNotifier,
       builder: (context, currentTheme, _) {
@@ -114,16 +119,20 @@ class AlSakrApp extends StatelessWidget {
   }
 }
 
-class ConnectionCheckWrapper extends StatefulWidget {
+class ConnectionCheckWrapper extends ConsumerStatefulWidget {
   const ConnectionCheckWrapper({super.key});
 
   @override
-  State<ConnectionCheckWrapper> createState() => _ConnectionCheckWrapperState();
+  ConsumerState<ConnectionCheckWrapper> createState() =>
+      _ConnectionCheckWrapperState();
 }
 
-class _ConnectionCheckWrapperState extends State<ConnectionCheckWrapper> {
+class _ConnectionCheckWrapperState
+    extends ConsumerState<ConnectionCheckWrapper> {
   bool _isConnected = false;
+  // Always show the loading screen initially to give the connection check a chance
   bool _isLoading = true;
+  bool _isOfflineMode = false;
   String _errorMessage = '';
 
   @override
@@ -136,19 +145,16 @@ class _ConnectionCheckWrapperState extends State<ConnectionCheckWrapper> {
     setState(() {
       _isLoading = true;
       _errorMessage = '';
+      _isOfflineMode = false;
     });
 
     try {
-      // مهلة 5 ثواني للاتصال
-      final health = await PBHelper().pb.health.check().timeout(
+      final health = await globalPb.health.check().timeout(
         const Duration(seconds: 5),
       );
 
       if (health.code == 200) {
-        // ✅ هام جداً: عند إعادة التهيئة، نمرر دالة التوجيه مرة أخرى
-        // لكي لا يتم استبدالها بـ null ويتوقف التوجيه عن العمل
         await PBHelper.init(onNotificationTap: onNotificationTap);
-        // فحص هل تم فتح التطبيق من إشعار (والتطبيق مغلق تماماً)
         bool launchedFromNotification = false;
         if (Platform.isAndroid || Platform.isIOS) {
           launchedFromNotification =
@@ -161,9 +167,7 @@ class _ConnectionCheckWrapperState extends State<ConnectionCheckWrapper> {
             _isLoading = false;
           });
 
-          // التوجيه إذا كان التطبيق مفتوحاً بسبب إشعار
-          if (launchedFromNotification && PBHelper().isLoggedIn) {
-            // تأخير بسيط لضمان بناء الواجهة
+          if (launchedFromNotification && globalPb.authStore.isValid) {
             Future.delayed(const Duration(milliseconds: 500), () {
               navigatorKey.currentState?.push(
                 MaterialPageRoute(builder: (context) => const NoticesScreen()),
@@ -174,26 +178,60 @@ class _ConnectionCheckWrapperState extends State<ConnectionCheckWrapper> {
       }
     } catch (e) {
       if (mounted) {
-        setState(() {
-          _isConnected = false;
-          _isLoading = false;
-          _errorMessage = "تعذر الاتصال بالسيرفر: $e";
-        });
+        // إذا كان المستخدم مسجل دخوله مسبقاً، نسمح له بالدخول في وضع أوفلاين
+        if (globalPb.authStore.isValid) {
+          setState(() {
+            _isConnected = false;
+            _isLoading = false;
+            _isOfflineMode = true;
+          });
+        } else {
+          setState(() {
+            _isConnected = false;
+            _isLoading = false;
+            _errorMessage = "$e";
+          });
+        }
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Listen to real connectivity status to automatically recover from offline mode
+    ref.listen<AsyncValue<bool>>(connectivityStatusProvider, (previous, next) {
+      if (next.value == true && _isOfflineMode) {
+        setState(() {
+          _isOfflineMode = false;
+          _isConnected = true;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('تم استعادة الاتصال بالسيرفر!'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      } else if (next.value == false && _isConnected) {
+        setState(() {
+          _isOfflineMode = true;
+          _isConnected = false;
+        });
+      }
+    });
+
+    // حالة التحميل (تظهر فقط لو مفيش تسجيل دخول مسبق)
     if (_isLoading) {
-      return const Scaffold(
+      return Scaffold(
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 20),
-              Text(
+              Image.asset('assets/splash_logo.png', width: 150, height: 150),
+              const SizedBox(height: 30),
+              const CircularProgressIndicator(),
+              const SizedBox(height: 20),
+              const Text(
                 "جاري الاتصال بالنظام...",
                 style: TextStyle(color: Colors.grey),
               ),
@@ -203,35 +241,120 @@ class _ConnectionCheckWrapperState extends State<ConnectionCheckWrapper> {
       );
     }
 
+    // إذا كان المستخدم مسجلاً للدخول، يتم عرضه فوراً (متصل أو وضع أوفلاين)
+    if (globalPb.authStore.isValid) {
+      if (_isOfflineMode || !_isConnected) {
+        return Scaffold(
+          body: Column(
+            children: [
+              // شريط تحذير أوفلاين
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(color: Colors.orange[800]),
+                child: SafeArea(
+                  bottom: false,
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.wifi_off_rounded,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 10),
+                      const Expanded(
+                        child: Text(
+                          "وضع عدم الاتصال - البيانات المحفوظة محلياً",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      TextButton.icon(
+                        onPressed: _checkServer,
+                        icon: const Icon(
+                          Icons.refresh_rounded,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                        label: const Text(
+                          "إعادة الاتصال",
+                          style: TextStyle(color: Colors.white, fontSize: 12),
+                        ),
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          backgroundColor: Colors.white.withOpacity(0.15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // عرض الداشبورد
+              const Expanded(child: DashboardScreen()),
+            ],
+          ),
+        );
+      }
+      // متصل ولا يوجد وضع أوفلاين
+      return const DashboardScreen();
+    }
+
+    // فشل الاتصال ولم يسبق تسجيل الدخول
     if (!_isConnected) {
       return Scaffold(
         body: Center(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(30.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.cloud_off, size: 80, color: Colors.red),
-                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.cloud_off_rounded,
+                    size: 60,
+                    color: Colors.redAccent,
+                  ),
+                ),
+                const SizedBox(height: 24),
                 const Text(
-                  "فشل الاتصال بالسيرفر",
+                  "لا يوجد اتصال بالسيرفر",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  _errorMessage,
+                const SizedBox(height: 12),
+                const Text(
+                  "يجب الاتصال بالسيرفر لتسجيل الدخول لأول مرة",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.grey),
+                  style: TextStyle(color: Colors.grey, fontSize: 14),
                 ),
                 const SizedBox(height: 30),
-                ElevatedButton.icon(
-                  onPressed: _checkServer,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text("إعادة المحاولة"),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30,
-                      vertical: 12,
+                SizedBox(
+                  width: 200,
+                  height: 48,
+                  child: ElevatedButton.icon(
+                    onPressed: _checkServer,
+                    icon: const Icon(Icons.refresh_rounded),
+                    label: const Text(
+                      "إعادة المحاولة",
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                 ),
@@ -242,7 +365,7 @@ class _ConnectionCheckWrapperState extends State<ConnectionCheckWrapper> {
       );
     }
 
-    // الانتقال للشاشة المناسبة
-    return PBHelper().isLoggedIn ? const SplashScreen() : const LoginScreen();
+    // متصل بالسيرفر ولم يسبق الدخول
+    return const LoginScreen();
   }
 }

@@ -4,10 +4,11 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
-import '../services/settings_service.dart';
+import 'package:flutter/foundation.dart';
+import 'package:al_sakr/core/services/settings_service.dart';
 
 class PdfService {
-  static Future<void> generateDeliveryOrderPdf(
+  static Future<Uint8List> generateDeliveryOrderBytes(
     Map<String, dynamic> order,
     List<Map<String, dynamic>> items,
   ) async {
@@ -142,7 +143,8 @@ class PdfService {
                 child: pw.Container(
                   decoration: const pw.BoxDecoration(
                     border: pw.Border(
-                      top: borderSide,
+                      // ✅ التعديل هنا: خلينا سُمك الخط العلوي 2.0 عشان يكون تقيل وواضح
+                      top: pw.BorderSide(color: PdfColors.black, width: 2.0),
                       left: borderSide,
                       right: borderSide,
                       // ⚠️ لا يوجد حد سفلي هنا لأن صف "فقط وقدره" سيغلقه
@@ -184,7 +186,7 @@ class PdfService {
                           pw.Container(
                             height: 35,
                             decoration: const pw.BoxDecoration(
-                              color: PdfColors.grey200,
+                              color: PdfColors.grey300,
                               border: pw.Border(bottom: borderSide),
                             ),
                             child: pw.Row(
@@ -251,7 +253,16 @@ class PdfService {
                             } else {
                               final data = row['data'] as Map<String, dynamic>;
                               String unitText =
-                                  data['unit'] ?? data['category'] ?? 'Piece';
+                                  (data['unit'] != null &&
+                                      data['unit'].toString().trim().isNotEmpty)
+                                  ? data['unit']
+                                  : (data['category'] != null &&
+                                        data['category']
+                                            .toString()
+                                            .trim()
+                                            .isNotEmpty)
+                                  ? data['category']
+                                  : 'قطعة';
                               return pw.Container(
                                 // ✅ إضافة خط فاصل أسفل كل صنف
                                 decoration: const pw.BoxDecoration(
@@ -267,7 +278,9 @@ class PdfService {
                                             pw.CrossAxisAlignment.start,
                                         children: [
                                           pw.Text(
-                                            data['productName'],
+                                            data['productName'] ??
+                                                data['name'] ??
+                                                'Unknown Product',
                                             style: pw.TextStyle(
                                               font: ttfEnBold,
                                               fontSize: 12,
@@ -280,13 +293,14 @@ class PdfService {
                                                   .trim()
                                                   .isNotEmpty &&
                                               data['description'] !=
-                                                  data['productName'])
+                                                  (data['productName'] ??
+                                                      data['name']))
                                             pw.Padding(
                                               padding: const pw.EdgeInsets.only(
                                                 top: 2,
                                               ),
                                               child: pw.Text(
-                                                data['description'],
+                                                data['description'].toString(),
                                                 style: pw.TextStyle(
                                                   font: ttfEn,
                                                   fontSize: 10,
@@ -313,11 +327,21 @@ class PdfService {
                                       flex: 1,
                                       padding: 5,
                                       alignment: pw.Alignment.center,
-                                      child: pw.Text(
-                                        unitText,
-                                        style: pw.TextStyle(
-                                          font: ttfEn,
-                                          fontSize: 12,
+                                      child: pw.Directionality(
+                                        textDirection: pw
+                                            .TextDirection
+                                            .rtl, // ✅ عشان الكلمة العربي تتظبط
+                                        child: pw.Text(
+                                          unitText,
+                                          style: pw.TextStyle(
+                                            font:
+                                                ttfAr, // ✅ تم التغيير لخط عربي عشان يقرأ "كرتونة"، "علبة"
+                                            fontFallback: [
+                                              ttfEn,
+                                              ttfEnBold,
+                                            ], // ✅ دعم الانجليزي زي "filter"
+                                            fontSize: 12,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -456,33 +480,52 @@ class PdfService {
       ),
     );
 
-    // ==============================================================
-    // 💾 منطق تسمية الملف
-    // ==============================================================
-    String fileName = "Delivery_Order";
+    return pdf.save();
+  }
 
+  /// Wrapper: generates bytes, saves to file, and opens it.
+  static Future<void> generateDeliveryOrderPdf(
+    Map<String, dynamic> order,
+    List<Map<String, dynamic>> items,
+  ) async {
+    final bytes = await generateDeliveryOrderBytes(order, items);
+
+    String fileName = "Delivery_Order";
     String manualNo = (order['manualNo'] ?? '').toString().trim();
     String supplyNo = (order['supplyOrderNumber'] ?? '').toString().trim();
-
-    String sanitize(String input) {
-      return input.replaceAll(RegExp(r'[\\/:*?"<>|]'), '-');
-    }
+    String rawDate =
+        order['date'] ?? order['deliveryDate'] ?? DateTime.now().toString();
+    String formattedDate = rawDate.split(' ')[0];
 
     if (manualNo.isNotEmpty || supplyNo.isNotEmpty) {
       List<String> parts = [];
-      if (manualNo.isNotEmpty) parts.add(sanitize(manualNo));
-      if (supplyNo.isNotEmpty) parts.add(sanitize(supplyNo));
+      if (manualNo.isNotEmpty)
+        parts.add(manualNo.replaceAll(RegExp(r'[\\/:*?"<>|]'), '-'));
+      if (supplyNo.isNotEmpty)
+        parts.add(supplyNo.replaceAll(RegExp(r'[\\/:*?"<>|]'), '-'));
       fileName += "_${parts.join('_')}";
     } else {
       fileName += "_$formattedDate";
     }
-
     fileName += ".pdf";
 
     final output = await getApplicationDocumentsDirectory();
     final file = File("${output.path}/$fileName");
-    await file.writeAsBytes(await pdf.save());
-    await OpenFile.open(file.path);
+    await file.writeAsBytes(bytes);
+
+    if (Platform.isLinux) {
+      try {
+        await Process.run('xdg-open', [file.path]);
+      } catch (e) {
+        debugPrint("Error opening PDF on Linux using xdg-open: $e");
+      }
+    } else {
+      try {
+        await OpenFile.open(file.path);
+      } catch (e) {
+        debugPrint("Error opening PDF: $e");
+      }
+    }
   }
 
   // ================= Helpers =================

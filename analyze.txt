@@ -1,0 +1,247 @@
+Analyzing al-sakr...
+An error occurred while executing an analyzer plugin: Failed to compile "/home/boody/.dartServer/.plugin_manager/8fb91d0b80f963ff360223f0ff63fb7c/analyzer_plugin/bin/plugin.dart" to an AOT snapshot.
+  pluginFolder = /home/boody/.dartServer/.plugin_manager/8fb91d0b80f963ff360223f0ff63fb7c/analyzer_plugin
+  exitCode = 255
+  stdout = 
+  stderr = 'dart compile' does not support build hooks, use 'dart build' instead.
+
+
+#0      PluginManager._compileAsAot (package:analysis_server/src/plugin/plugin_manager.dart:515)
+#1      PluginManager._computeFiles (package:analysis_server/src/plugin/plugin_manager.dart:563)
+#2      PluginManager.filesFor (package:analysis_server/src/plugin/plugin_manager.dart:316)
+#3      PluginManager.addPluginToContextRoot (package:analysis_server/src/plugin/plugin_manager.dart:162)
+#4      PluginWatcher._addLegacyPlugins (package:analysis_server/src/plugin/plugin_watcher.dart:100)
+#5      PluginWatcher.addedDriver (package:analysis_server/src/plugin/plugin_watcher.dart:49)
+#6      AnalysisDriverScheduler.add (package:analyzer/src/dart/analysis/driver.dart:2564)
+#7      new AnalysisDriver (package:analyzer/src/dart/analysis/driver.dart:347)
+#8      ContextBuilderImpl.createContext (package:analyzer/src/dart/analysis/context_builder.dart:158)
+#9      new AnalysisContextCollectionImpl (package:analyzer/src/dart/analysis/analysis_context_collection.dart:122)
+#10     ContextManagerImpl._createAnalysisContexts.performContextRebuildGuarded.performContextRebuild (package:analysis_server/src/context_manager.dart:590)
+<asynchronous suspension>
+#11     ContextManagerImpl._createAnalysisContexts.performContextRebuildGuarded (package:analysis_server/src/context_manager.dart:726)
+<asynchronous suspension>
+#12     _CancellingTaskQueue.queue.<anonymous closure> (package:analysis_server/src/context_manager.dart:1030)
+<asynchronous suspension>
+#13     ContextManagerImpl.setRoots (package:analysis_server/src/context_manager.dart:380)
+<asynchronous suspension>
+#14     LegacyAnalysisServer.setAnalysisRoots (package:analysis_server/src/legacy_analysis_server.dart:899)
+<asynchronous suspension>
+#15     AnalysisSetAnalysisRootsHandler.handle (package:analysis_server/src/handler/legacy/analysis_set_analysis_roots.dart:56)
+<asynchronous suspension>
+#16     LegacyAnalysisServer.handleRequest.<anonymous closure>.<anonymous closure> (package:analysis_server/src/legacy_analysis_server.dart:646)
+<asynchronous suspension>
+#17     OperationPerformanceImpl.runAsync (package:analyzer/src/util/performance/operation_performance.dart:199)
+<asynchronous suspension>
+#18     LegacyAnalysisServer.handleRequest.<anonymous closure> (package:analysis_server/src/legacy_analysis_server.dart:626)
+<asynchronous suspension>
+
+
+  error - lib/features/clients/presentations/client_dialog.dart:232:24 - This expression has a type of 'void' so its value can't be used. Try checking to see if you're using the correct API; there might be a function or call that returns void you didn't expect. Also check type parameters and variables which might also be void. - use_of_void_result
+warning - analysis_options.yaml:10:10 - The include file 'package:flutter_lints/flutter.yaml' in '/home/boody/development/al-sakr/analysis_options.yaml' can't be found when analyzing '/home/boody/development/al-sakr'. - include_file_not_found
+warning - lib/core/init/app_init_provider.dart:24:11 - The value of the local variable 'pb' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - lib/features/clients/controllers/client_controller.dart:17:23 - The value of the field '_subscription' isn't used. Try removing the field, or using it. - unused_field
+warning - lib/features/clients/controllers/client_controller.dart:21:11 - The value of the local variable 'pb' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - lib/features/clients/presentations/clients_screen.dart:452:30 - The value of the field '_allTransactions' isn't used. Try removing the field, or using it. - unused_field
+warning - lib/features/dashboard/presentations/dashboard_screen.dart:1:8 - Unused import: 'package:al_sakr/features/sales/controllers/sales_controller.dart'. Try removing the import directive. - unused_import
+warning - lib/features/dashboard/presentations/dashboard_screen.dart:2:8 - Unused import: 'package:al_sakr/features/purchases/controllers/purchases_controller.dart'. Try removing the import directive. - unused_import
+warning - lib/features/dashboard/presentations/dashboard_screen.dart:3:8 - Unused import: 'package:al_sakr/features/store/controllers/store_controller.dart'. Try removing the import directive. - unused_import
+warning - lib/features/dashboard/presentations/dashboard_screen.dart:4:8 - Unused import: 'package:al_sakr/features/trash/controllers/trash_controller.dart'. Try removing the import directive. - unused_import
+warning - lib/features/dashboard/presentations/dashboard_screen.dart:6:8 - Unused import: 'package:al_sakr/features/auth/controllers/auth_controller.dart'. Try removing the import directive. - unused_import
+warning - lib/features/dashboard/presentations/dashboard_screen.dart:14:8 - Unused import: 'package:al_sakr/features/notices/repositories/notices_repository.dart'. Try removing the import directive. - unused_import
+warning - lib/features/dashboard/presentations/dashboard_screen.dart:26:8 - Duplicate import. Try removing all but one import of the library. - duplicate_import
+warning - lib/features/dashboard/presentations/dashboard_screen.dart:32:8 - Duplicate import. Try removing all but one import of the library. - duplicate_import
+warning - lib/features/dashboard/presentations/dashboard_screen.dart:33:8 - Duplicate import. Try removing all but one import of the library. - duplicate_import
+warning - lib/features/dashboard/presentations/dashboard_screen.dart:34:8 - Duplicate import. Try removing all but one import of the library. - duplicate_import
+warning - lib/features/dashboard/presentations/dashboard_screen.dart:34:8 - Unused import: '../../auth/controllers/auth_controller.dart'. Try removing the import directive. - unused_import
+warning - lib/features/dashboard/presentations/dashboard_screen.dart:36:7 - The declaration '_superAdminId' isn't referenced. Try removing the declaration of '_superAdminId'. - unused_element
+warning - lib/features/dashboard/presentations/delivery_orders_screen.dart:15:7 - The declaration '_superAdminId' isn't referenced. Try removing the declaration of '_superAdminId'. - unused_element
+warning - lib/features/dashboard/presentations/returns_list_screen.dart:14:7 - The declaration '_superAdminId' isn't referenced. Try removing the declaration of '_superAdminId'. - unused_element
+warning - lib/features/expenses/controllers/expenses_controller.dart:19:11 - The value of the local variable 'pb' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - lib/features/expenses/presentations/expenses_screen.dart:9:7 - The declaration '_superAdminId' isn't referenced. Try removing the declaration of '_superAdminId'. - unused_element
+warning - lib/features/expenses/presentations/expenses_screen.dart:59:12 - The value of the local variable 'filterTitle' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - lib/features/notices/presentations/notices_screen.dart:13:7 - The declaration '_superAdminId' isn't referenced. Try removing the declaration of '_superAdminId'. - unused_element
+warning - lib/features/purchases/controllers/purchases_controller.dart:21:11 - The value of the local variable 'pb' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - lib/features/purchases/presentations/purchase_history_screen.dart:11:7 - The declaration '_superAdminId' isn't referenced. Try removing the declaration of '_superAdminId'. - unused_element
+warning - lib/features/purchases/presentations/purchase_history_screen.dart:112:12 - The value of the local variable 'startStr' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - lib/features/purchases/presentations/purchase_history_screen.dart:113:12 - The value of the local variable 'endStr' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - lib/features/purchases/presentations/purchase_screen.dart:12:7 - The declaration '_superAdminId' isn't referenced. Try removing the declaration of '_superAdminId'. - unused_element
+warning - lib/features/reports/presentations/reports_screen.dart:13:7 - The declaration '_superAdminId' isn't referenced. Try removing the declaration of '_superAdminId'. - unused_element
+warning - lib/features/reports/presentations/reports_screen.dart:31:23 - The value of the field '_invoiceReturnsPaidMap' isn't used. Try removing the field, or using it. - unused_field
+warning - lib/features/reports/presentations/reports_screen.dart:44:16 - The value of the field '_superAdminId' isn't used. Try removing the field, or using it. - unused_field
+warning - lib/features/sales/controllers/sales_controller.dart:21:11 - The value of the local variable 'pb' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - lib/features/sales/presentations/sales_screen.dart:11:7 - The declaration '_superAdminId' isn't referenced. Try removing the declaration of '_superAdminId'. - unused_element
+warning - lib/features/settings/presentations/settings_screen.dart:12:7 - The declaration '_superAdminId' isn't referenced. Try removing the declaration of '_superAdminId'. - unused_element
+warning - lib/features/store/presentations/store_screen.dart:12:7 - The declaration '_superAdminId' isn't referenced. Try removing the declaration of '_superAdminId'. - unused_element
+warning - lib/features/suppliers/controllers/supplier_controller.dart:19:11 - The value of the local variable 'pb' isn't used. Try removing the variable or using it. - unused_local_variable
+warning - lib/features/suppliers/presentations/suppliers_screen.dart:9:7 - The declaration '_superAdminId' isn't referenced. Try removing the declaration of '_superAdminId'. - unused_element
+warning - lib/features/users/presentations/users_screen.dart:575:10 - The declaration '_buildSwitch' isn't referenced. Try removing the declaration of '_buildSwitch'. - unused_element
+   info - lib/core/network/pb_helper.dart:112:30 - 'created' is deprecated and shouldn't be used. created is no longer mandatory field; use get<String>('created'). Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/core/network/pb_helper.dart:113:30 - 'updated' is deprecated and shouldn't be used. updated is no longer mandatory field; use get<String>('updated'). Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/core/network/pb_helper.dart:115:16 - 'expand' is deprecated and shouldn't be used. This field is superseded by the more generic get<T>(keyPath) method.
+          You can access the expanded record models and fields using dot-notation similar to the regular record fields:
+          record.get<String>("expand.user.email");
+          record.get<RecordModel>("expand.user");
+          record.get<List<RecordModel>>("expand.products");. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/core/network/pb_helper.dart:116:18 - 'expand' is deprecated and shouldn't be used. This field is superseded by the more generic get<T>(keyPath) method.
+          You can access the expanded record models and fields using dot-notation similar to the regular record fields:
+          record.get<String>("expand.user.email");
+          record.get<RecordModel>("expand.user");
+          record.get<List<RecordModel>>("expand.products");. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/core/network/pb_helper.dart:117:39 - 'expand' is deprecated and shouldn't be used. This field is superseded by the more generic get<T>(keyPath) method.
+          You can access the expanded record models and fields using dot-notation similar to the regular record fields:
+          record.get<String>("expand.user.email");
+          record.get<RecordModel>("expand.user");
+          record.get<List<RecordModel>>("expand.products");. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/core/network/pb_helper.dart:119:18 - 'expand' is deprecated and shouldn't be used. This field is superseded by the more generic get<T>(keyPath) method.
+          You can access the expanded record models and fields using dot-notation similar to the regular record fields:
+          record.get<String>("expand.user.email");
+          record.get<RecordModel>("expand.user");
+          record.get<List<RecordModel>>("expand.products");. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/core/network/pb_helper.dart:120:37 - 'expand' is deprecated and shouldn't be used. This field is superseded by the more generic get<T>(keyPath) method.
+          You can access the expanded record models and fields using dot-notation similar to the regular record fields:
+          record.get<String>("expand.user.email");
+          record.get<RecordModel>("expand.user");
+          record.get<List<RecordModel>>("expand.products");. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/core/network/pb_helper.dart:122:18 - 'expand' is deprecated and shouldn't be used. This field is superseded by the more generic get<T>(keyPath) method.
+          You can access the expanded record models and fields using dot-notation similar to the regular record fields:
+          record.get<String>("expand.user.email");
+          record.get<RecordModel>("expand.user");
+          record.get<List<RecordModel>>("expand.products");. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/core/network/pb_helper.dart:123:38 - 'expand' is deprecated and shouldn't be used. This field is superseded by the more generic get<T>(keyPath) method.
+          You can access the expanded record models and fields using dot-notation similar to the regular record fields:
+          record.get<String>("expand.user.email");
+          record.get<RecordModel>("expand.user");
+          record.get<List<RecordModel>>("expand.products");. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/core/network/pb_helper.dart:125:18 - 'expand' is deprecated and shouldn't be used. This field is superseded by the more generic get<T>(keyPath) method.
+          You can access the expanded record models and fields using dot-notation similar to the regular record fields:
+          record.get<String>("expand.user.email");
+          record.get<RecordModel>("expand.user");
+          record.get<List<RecordModel>>("expand.products");. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/core/network/pb_helper.dart:126:35 - 'expand' is deprecated and shouldn't be used. This field is superseded by the more generic get<T>(keyPath) method.
+          You can access the expanded record models and fields using dot-notation similar to the regular record fields:
+          record.get<String>("expand.user.email");
+          record.get<RecordModel>("expand.user");
+          record.get<List<RecordModel>>("expand.products");. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/core/network/pb_helper.dart:128:18 - 'expand' is deprecated and shouldn't be used. This field is superseded by the more generic get<T>(keyPath) method.
+          You can access the expanded record models and fields using dot-notation similar to the regular record fields:
+          record.get<String>("expand.user.email");
+          record.get<RecordModel>("expand.user");
+          record.get<List<RecordModel>>("expand.products");. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/core/network/pb_helper.dart:129:30 - 'expand' is deprecated and shouldn't be used. This field is superseded by the more generic get<T>(keyPath) method.
+          You can access the expanded record models and fields using dot-notation similar to the regular record fields:
+          record.get<String>("expand.user.email");
+          record.get<RecordModel>("expand.user");
+          record.get<List<RecordModel>>("expand.products");. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/core/services/update_service.dart:68:25 - 'baseUrl' is deprecated and shouldn't be used. use baseURL. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/core/services/update_service.dart:149:25 - 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/auth/presentations/login_screen.dart:129:40 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/auth/repositories/auth_repository.dart:14:52 - 'model' is deprecated and shouldn't be used. use record. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/auth/repositories/auth_repository.dart:17:20 - 'admins' is deprecated and shouldn't be used. use collection('_superusers'). Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/clients/presentations/client_dialog.dart:153:29 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/clients/presentations/client_dialog.dart:155:29 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/clients/presentations/client_dialog.dart:166:29 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/clients/presentations/client_dialog.dart:168:29 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/clients/presentations/clients_screen.dart:265:48 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/clients/presentations/clients_screen.dart:266:50 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/clients/presentations/clients_screen.dart:405:33 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/clients/presentations/clients_screen.dart:405:59 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/clients/presentations/clients_screen.dart:407:43 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/clients/presentations/clients_screen.dart:1126:36 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/clients/presentations/clients_screen.dart:1154:43 - 'baseUrl' is deprecated and shouldn't be used. use baseURL. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/dashboard/presentations/dashboard_screen.dart:395:33 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/dashboard/presentations/dashboard_screen.dart:423:33 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/dashboard/presentations/dashboard_screen.dart:449:31 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/dashboard/presentations/dashboard_screen.dart:465:33 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/dashboard/presentations/dashboard_screen.dart:466:33 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/dashboard/presentations/delivery_orders_screen.dart:345:29 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/dashboard/presentations/delivery_orders_screen.dart:348:31 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/dashboard/presentations/delivery_orders_screen.dart:640:54 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/dashboard/presentations/delivery_orders_screen.dart:1095:59 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/dashboard/presentations/delivery_orders_screen.dart:1179:58 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/dashboard/presentations/delivery_orders_screen.dart:1202:60 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/dashboard/presentations/delivery_orders_screen.dart:1213:64 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/expenses/presentations/expenses_screen.dart:337:29 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/expenses/presentations/expenses_screen.dart:842:59 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/expenses/presentations/expenses_screen.dart:913:45 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/expenses/presentations/expenses_screen.dart:998:54 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/notices/presentations/notices_screen.dart:426:48 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/notices/presentations/notices_screen.dart:627:49 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/notices/presentations/notices_screen.dart:655:37 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/notices/presentations/notices_screen.dart:867:49 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/notices/presentations/notices_screen.dart:870:33 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/notices/presentations/notices_screen.dart:1025:54 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/notices/presentations/notices_screen.dart:1133:52 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/notices/presentations/notices_screen.dart:1222:49 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/notices/presentations/notices_screen.dart:1223:37 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/notices/repositories/notices_repository.dart:25:34 - 'model' is deprecated and shouldn't be used. use record. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/purchases/presentations/purchase_history_screen.dart:653:36 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/purchases/presentations/purchase_history_screen.dart:654:34 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/purchases/presentations/purchase_history_screen.dart:760:52 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/purchases/presentations/purchase_history_screen.dart:802:41 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/purchases/presentations/purchase_history_screen.dart:899:42 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/purchases/presentations/purchase_history_screen.dart:1186:48 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/purchases/presentations/purchase_history_screen.dart:1226:41 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/purchases/presentations/purchase_screen.dart:677:47 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/purchases/presentations/purchase_screen.dart:800:52 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/purchases/presentations/purchase_screen.dart:826:57 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/purchases/presentations/purchase_screen.dart:964:38 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/purchases/presentations/purchase_screen.dart:967:54 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/purchases/presentations/purchase_screen.dart:1138:28 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/purchases/presentations/purchase_screen.dart:1139:26 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/purchases/presentations/purchase_screen.dart:1143:30 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/purchases/presentations/purchase_screen.dart:1144:28 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/reports/presentations/reports_screen.dart:382:36 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/reports/presentations/reports_screen.dart:383:34 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/reports/presentations/reports_screen.dart:518:39 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/reports/presentations/reports_screen.dart:821:45 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/reports/presentations/reports_screen.dart:885:54 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/reports/presentations/reports_screen.dart:943:66 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/reports/presentations/reports_screen.dart:1014:61 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/reports/presentations/reports_screen.dart:1253:41 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/sales/presentations/sales_screen.dart:721:47 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/sales/presentations/sales_screen.dart:842:54 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/sales/presentations/sales_screen.dart:866:57 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/sales/presentations/sales_screen.dart:1009:38 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/sales/presentations/sales_screen.dart:1012:54 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/sales/presentations/sales_screen.dart:1189:28 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/sales/presentations/sales_screen.dart:1190:26 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/sales/presentations/sales_screen.dart:1194:30 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/sales/presentations/sales_screen.dart:1195:28 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/store/presentations/product_dialog.dart:133:23 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/store/presentations/product_dialog.dart:134:23 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/store/presentations/product_dialog.dart:438:59 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/store/presentations/product_dialog.dart:496:23 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/store/presentations/product_dialog.dart:497:23 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/store/presentations/product_dialog.dart:499:24 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/store/presentations/product_dialog.dart:500:23 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/store/presentations/product_dialog.dart:543:23 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/store/presentations/product_dialog.dart:544:23 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/store/presentations/product_history_screen.dart:114:50 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/store/presentations/store_screen.dart:405:39 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/store/presentations/store_screen.dart:409:42 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/store/presentations/store_screen.dart:413:42 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/store/presentations/store_screen.dart:459:41 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/store/presentations/store_screen.dart:460:41 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/suppliers/presentations/supplier_dialog.dart:327:48 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/suppliers/presentations/supplier_dialog.dart:374:43 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/suppliers/presentations/supplier_dialog.dart:375:43 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/suppliers/presentations/supplier_dialog.dart:389:43 - 'groupValue' is deprecated and shouldn't be used. Use a RadioGroup ancestor to manage group value instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/suppliers/presentations/supplier_dialog.dart:390:43 - 'onChanged' is deprecated and shouldn't be used. Use RadioGroup to handle value change instead. This feature was deprecated after v3.32.0-0.0.pre. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/suppliers/presentations/suppliers_screen.dart:257:48 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/suppliers/presentations/suppliers_screen.dart:258:50 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/suppliers/presentations/suppliers_screen.dart:390:33 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/suppliers/presentations/suppliers_screen.dart:390:59 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/suppliers/presentations/suppliers_screen.dart:392:43 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/trash/presentations/trash_screen.dart:414:41 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/trash/presentations/trash_screen.dart:545:41 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/trash/presentations/trash_screen.dart:547:60 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/trash/presentations/trash_screen.dart:646:40 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/trash/presentations/trash_screen.dart:679:41 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/trash/presentations/trash_screen.dart:702:36 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/trash/presentations/trash_screen.dart:762:56 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/trash/presentations/trash_screen.dart:911:44 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/trash/presentations/trash_screen.dart:1106:50 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/users/presentations/users_screen.dart:520:22 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+   info - lib/features/users/presentations/users_screen.dart:522:41 - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss. Try replacing the use of the deprecated member with the replacement. - deprecated_member_use
+
+163 issues found.

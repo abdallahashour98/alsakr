@@ -33,9 +33,10 @@ dependencies:
     
   flutter_localizations:
     sdk: flutter  
-    # أدوات قاعدة البيانات
-  # sqflite: ^2.3.0
-  # sqflite_common_ffi: ^2.3.0
+    # أدوات قاعدة البيانات المحلية (Offline-First)
+  sqflite: ^2.4.2
+  sqflite_common_ffi: ^2.3.4+4
+  uuid: ^4.5.1
   pocketbase: ^0.23.1
   path: ^1.8.3
   share_plus: ^7.2.1      # عشان نشارك ملف الداتا بيز
@@ -67,6 +68,8 @@ dependencies:
   badges: ^3.1.2
   firebase_messaging: ^15.2.10
   googleapis_auth: ^1.4.1  # 👈 ضف هذا السطر
+  flutter_riverpod: any
+  riverpod_annotation: any
   
 
   
@@ -77,11 +80,18 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   
 
+  intl: any
+  connectivity_plus: ^7.0.0
+  bidi: ^2.0.13
 dev_dependencies:
   flutter_test:
     sdk: flutter
   # لاحظ المسافة البادئة هنا (مهمة جداً)
   flutter_launcher_icons: ^0.13.1
+  build_runner: any
+  riverpod_generator: any
+  custom_lint: any
+  riverpod_lint: any
 
 # إعدادات الأيقونة (بداية السطر)
 flutter_launcher_icons:

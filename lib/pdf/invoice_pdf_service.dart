@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
 import 'package:intl/intl.dart';
 
-import '../services/settings_service.dart';
+import 'package:al_sakr/core/services/settings_service.dart';
 
 class InvoicePdfService {
   /// دالة مساعدة لتنسيق الأرقام (1500.00 -> 1,500)
@@ -17,7 +17,7 @@ class InvoicePdfService {
     return formatter.format(numVal);
   }
 
-  static Future<void> generateInvoice(
+  static Future<Uint8List> generateInvoiceBytes(
     Map<String, dynamic> sale,
     List<Map<String, dynamic>> items,
   ) async {
@@ -181,10 +181,11 @@ class InvoicePdfService {
                 ),
                 columnWidths: {
                   0: const pw.FixedColumnWidth(40), // No
-                  1: const pw.FlexColumnWidth(4), // Item
+                  1: const pw.FlexColumnWidth(3), // Item
                   2: const pw.FlexColumnWidth(1), // Qty
-                  3: const pw.FlexColumnWidth(1.5), // Price
-                  4: const pw.FlexColumnWidth(1.5), // Total
+                  3: const pw.FlexColumnWidth(1), // Unit
+                  4: const pw.FlexColumnWidth(1.5), // Price
+                  5: const pw.FlexColumnWidth(1.5), // Total
                 },
                 children: [
                   pw.TableRow(
@@ -197,6 +198,7 @@ class InvoicePdfService {
                         align: pw.Alignment.center,
                       ),
                       _buildCell("Qty", isHeader: true),
+                      _buildCell("Unit", isHeader: true),
                       _buildCell("Price", isHeader: true),
                       _buildCell("Total Price", isHeader: true),
                     ],
@@ -214,6 +216,7 @@ class InvoicePdfService {
                           align: pw.Alignment.center,
                         ),
                         _buildCell(formatNumber(qty)),
+                        _buildCell(item['unit'] ?? 'قطعة'),
                         _buildCell(formatNumber(price)),
                         _buildCell(formatNumber(total), isBold: true),
                       ],
@@ -316,11 +319,29 @@ class InvoicePdfService {
       ),
     );
 
+    return pdf.save();
+  }
+
+  /// Wrapper that generates the PDF bytes, saves to file, and opens it.
+  static Future<void> generateInvoice(
+    Map<String, dynamic> sale,
+    List<Map<String, dynamic>> items,
+  ) async {
+    final bytes = await generateInvoiceBytes(sale, items);
+    String refNumber =
+        sale['referenceNumber'] ?? sale['id'].toString().substring(0, 5);
     try {
       final output = await getApplicationDocumentsDirectory();
       final file = File("${output.path}/Invoice_$refNumber.pdf");
-      await file.writeAsBytes(await pdf.save());
-      await OpenFile.open(file.path);
+      await file.writeAsBytes(bytes);
+
+      if (Platform.isLinux) {
+        print(
+          "PDF Saved at: ${file.path} (Skipping OpenFile on Linux because of GTK crashes)",
+        );
+      } else {
+        await OpenFile.open(file.path);
+      }
     } catch (e) {
       print("Error opening PDF: $e");
     }
