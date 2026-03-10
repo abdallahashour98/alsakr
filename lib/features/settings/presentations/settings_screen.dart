@@ -21,7 +21,7 @@ class SettingsScreen extends ConsumerStatefulWidget {
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool _isLoading = false;
-  final String _appVersion = "3.0.0 (Online)";
+  final String _appVersion = "1.0.4 (Online)";
 
   // الكونترولرز (موجودين عشان يحافظوا على الداتا حتى لو مش ظاهرين)
   final TextEditingController _companyNameController = TextEditingController();
