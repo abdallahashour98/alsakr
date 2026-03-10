@@ -148,13 +148,15 @@ class _ConnectionCheckWrapperState
       _isOfflineMode = false;
     });
 
+    // We must initialize PBHelper (and local authStore) regardless of online status.
+    await PBHelper.init(onNotificationTap: onNotificationTap);
+
     try {
       final health = await globalPb.health.check().timeout(
-        const Duration(seconds: 5),
+        const Duration(seconds: 4),
       );
 
       if (health.code == 200) {
-        await PBHelper.init(onNotificationTap: onNotificationTap);
         bool launchedFromNotification = false;
         if (Platform.isAndroid || Platform.isIOS) {
           launchedFromNotification =
@@ -175,6 +177,8 @@ class _ConnectionCheckWrapperState
             });
           }
         }
+      } else {
+        throw Exception('Server returned non-200 status');
       }
     } catch (e) {
       if (mounted) {
@@ -189,7 +193,7 @@ class _ConnectionCheckWrapperState
           setState(() {
             _isConnected = false;
             _isLoading = false;
-            _errorMessage = "$e";
+            _errorMessage = "تعذر الاتصال بالسيرفر. تأكد من اتصالك بالشبكة.";
           });
         }
       }
