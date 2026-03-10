@@ -371,7 +371,7 @@ class _PendingSyncDialogState extends ConsumerState<_PendingSyncDialog> {
             ),
             const SizedBox(height: 10),
             const Text(
-              'هذه السجلات لم يتم مزامنتها مع الخادم المركزي. يمكنك مسح السجلات للإلغاء.',
+              'هذه السجلات لم يتم مزامنتها مع الداتا بيز . يمكنك مسح السجلات للإلغاء.',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.grey),
             ),

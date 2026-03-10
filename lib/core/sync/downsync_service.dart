@@ -257,7 +257,15 @@ class DownsyncService {
     data.remove('imagePath');
     data.remove('expand');
 
-    // Convert booleans to SQLite integers (handle both actual bools and strings)
+    // 1. Convert ALL native booleans from PocketBase JSON into SQLite integers.
+    // This dynamically handles the 30+ permission columns and any other boolean type.
+    for (final key in data.keys.toList()) {
+      if (data[key] is bool) {
+        data[key] = (data[key] as bool) ? 1 : 0;
+      }
+    }
+
+    // 2. Fallback: handle legacy boolean string/num values for specific known columns
     for (final key in [
       'is_deleted',
       'is_complete',
@@ -267,12 +275,16 @@ class DownsyncService {
       'allow_delete_clients',
       'allow_add_purchases',
       'allow_add_orders',
+      'allow_change_price',
+      'allow_add_discount',
+      'show_buy_price',
+      'allow_view_drawer',
+      'allow_add_revenues',
+      'allow_inventory_settlement',
     ]) {
-      if (data.containsKey(key)) {
+      if (data.containsKey(key) && data[key] is! int) {
         final val = data[key];
-        if (val is bool) {
-          data[key] = val ? 1 : 0;
-        } else if (val is String) {
+        if (val is String) {
           final lower = val.toLowerCase();
           data[key] = (lower == 'true' || lower == '1') ? 1 : 0;
         } else if (val is num) {

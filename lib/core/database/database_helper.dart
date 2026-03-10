@@ -79,12 +79,12 @@ class DatabaseHelper {
         email                 TEXT NOT NULL DEFAULT '',
         name                  TEXT NOT NULL DEFAULT '',
         role                  TEXT NOT NULL DEFAULT 'employee',
-        // Admin permissions
+        -- Admin permissions
         allow_manage_permissions INTEGER NOT NULL DEFAULT 0,
         allow_edit_settings   INTEGER NOT NULL DEFAULT 0,
         allow_backup_data     INTEGER NOT NULL DEFAULT 0,
 
-        // Sales permissions
+        -- Sales permissions
         show_sales            INTEGER NOT NULL DEFAULT 0,
         show_sales_history    INTEGER NOT NULL DEFAULT 0,
         allow_add_orders      INTEGER NOT NULL DEFAULT 0,
@@ -94,14 +94,14 @@ class DatabaseHelper {
         allow_change_price    INTEGER NOT NULL DEFAULT 0,
         allow_add_discount    INTEGER NOT NULL DEFAULT 0,
 
-        // Purchases permissions
+        -- Purchases permissions
         show_purchases        INTEGER NOT NULL DEFAULT 0,
         show_purchase_history INTEGER NOT NULL DEFAULT 0,
         allow_add_purchases   INTEGER NOT NULL DEFAULT 0,
         allow_edit_purchases  INTEGER NOT NULL DEFAULT 0,
         allow_delete_purchases INTEGER NOT NULL DEFAULT 0,
 
-        // Stock permissions
+        -- Stock permissions
         show_stock            INTEGER NOT NULL DEFAULT 0,
         allow_add_products    INTEGER NOT NULL DEFAULT 0,
         allow_edit_products   INTEGER NOT NULL DEFAULT 0,
@@ -112,14 +112,14 @@ class DatabaseHelper {
         allow_inventory_settlement INTEGER NOT NULL DEFAULT 0,
         show_buy_price        INTEGER NOT NULL DEFAULT 0,
 
-        // Clients/Suppliers permissions
+        -- Clients/Suppliers permissions
         show_clients          INTEGER NOT NULL DEFAULT 0,
         show_suppliers        INTEGER NOT NULL DEFAULT 0,
         allow_add_clients     INTEGER NOT NULL DEFAULT 0,
         allow_edit_clients    INTEGER NOT NULL DEFAULT 0,
         allow_delete_clients  INTEGER NOT NULL DEFAULT 0,
 
-        // Financial/Reports permissions
+        -- Financial/Reports permissions
         show_expenses         INTEGER NOT NULL DEFAULT 0,
         allow_add_expenses    INTEGER NOT NULL DEFAULT 0,
         allow_delete_expenses INTEGER NOT NULL DEFAULT 0,
